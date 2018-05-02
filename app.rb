@@ -22,7 +22,7 @@ end
 
 # responds to sign in form
 post "/sign-in" do
-  @user = User.find_by(username: params[:username])
+  @user = User.find_by(trainer_name: params[:trainer_name])
 
   # checks to see if the user exists
   #   and also if the user password matches the password in the db
@@ -31,13 +31,13 @@ post "/sign-in" do
     session[:user_id] = @user.id
 
     # lets the user know that something is wrong
-    flash[:info] = "You have been signed in"
+    flash[:info] = "#{@user.trainer_name} successfully signed in!"
 
     # redirects to the home page
     redirect "/"
   else
     # lets the user know that something is wrong
-    flash[:warning] = "Your username or password is incorrect"
+    flash[:warning] = "Your trainer name or password is incorrect"
 
     # if user does not exist or password does not match then
     #   redirect the user to the sign in page
@@ -54,15 +54,19 @@ end
 
 post "/sign-up" do
   @user = User.create(
-    username: params[:username],
-    password: params[:password]
+    trainer_name: params[:trainer_name],
+    password: params[:password],
+    first_name: params[:first_name],
+    last_name: params[:last_name],
+    email: params[:email],
+    birthday: params[:birthday]
   )
 
   # this line does the signing in
   session[:user_id] = @user.id
 
   # lets the user know they have signed up
-  flash[:info] = "Thank you for signing up"
+  flash[:info] = "Thanks #{@user.trainer_name} for signing up!"
 
   # assuming this page exists
   redirect "/"

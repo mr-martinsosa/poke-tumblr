@@ -9,6 +9,8 @@ set :database, "sqlite3:pokemon.db"
 
 get "/" do
   if session[:user_id]
+    # p :user_id
+    @user = User.find(session[:user_id])
     erb :signed_in_homepage
   else
     erb :signed_out_homepage

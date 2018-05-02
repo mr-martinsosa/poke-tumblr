@@ -5,7 +5,7 @@ require "sinatra/flash"
 
 enable :sessions
 
-set :database, "sqlite3:app.db"
+set :database, "sqlite3:pokemon.db"
 
 get "/" do
   if session[:user_id]

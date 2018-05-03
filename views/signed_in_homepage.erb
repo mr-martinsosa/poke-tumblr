@@ -9,3 +9,13 @@
         <a href="/create-post" class="btn btn-primary">Create a new post!</a>
     </div>
 </section>
+
+<%for post in @posts%>
+    <section class = "card text-center text-white border-light">
+        <div class="card-body">
+          <h2> Author: <%=User.find(post.user_id).trainer_name%>
+          <h3>Title: <%=post.title%></h3>
+          <h5><%=post.content%></h3>
+        </div>
+    </section>
+<% end %>

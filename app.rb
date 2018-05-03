@@ -11,6 +11,10 @@ get "/" do
   if session[:user_id]
     # p :user_id
     @user = User.find(session[:user_id])
+    @posts = Post.all
+    p @user.posts[0]
+    
+    # p @user.posts.title 
     erb :signed_in_homepage
   else
     erb :signed_out_homepage
@@ -84,5 +88,24 @@ get "/sign-out" do
   # lets the user know they have signed out
   flash[:info] = "You have been signed out"
   
+  redirect "/"
+end
+
+get "/create-post" do
+  if session[:user_id] == nil
+    flash[:warning] = "You need to be logged in to access this section."
+    redirect "/"
+  end
+
+  erb :create_post
+end
+
+post "/create-post" do
+  @user = User.find(session[:user_id]) 
+  @post = Post.create(
+    title: params[:title],
+    content: params[:content],
+    user_id: @user.id
+  )
   redirect "/"
 end

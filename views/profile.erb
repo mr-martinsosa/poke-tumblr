@@ -31,7 +31,7 @@
         <div class="card-body">
                 <h2> Trainer Name: <%=@search_user.trainer_name%> </h2>
                 <p>  Joined with the ID#<%=@search_user.id%> </p>
-                <p> <%=@user.created_at.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
+                <p> <%=@search_user.created_at.localtime.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
 
                 <% if @search_user.last_name == "" %>
                     <h3> First Name: N/A </h3>

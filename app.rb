@@ -152,8 +152,13 @@ end
 
 get "/profile/:id" do
   @search_user = User.find(params[:id])
-  @user = User.find(session[:user_id])
-  @current_user = @user.trainer_name
+  
+  if session[:user_id] != nil
+    @user = User.find(session[:user_id])
+    @current_user = @user.trainer_name
+  end
+  
+  
 
   erb :profile
 end
@@ -169,4 +174,16 @@ post "/profile/:id" do
   session[:user_id] = nil
   flash[:warning] = "Account Deleted."
   redirect "/"
+end
+
+post "/query" do
+  p params[:trainer_name]
+  p "hello"
+  if User.all.exists?(:trainer_name => params[:trainer_name]) #If trainer name matches params do next
+    p "hi"
+    @query_user = User.find_by(trainer_name: params[:trainer_name])
+    redirect "/profile/#{@query_user.id}"
+  else
+    redirect "/404"
+  end
 end

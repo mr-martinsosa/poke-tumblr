@@ -3,17 +3,23 @@ require "sinatra/activerecord"
 require "sinatra/flash"
 require "./models"
 
-enable :sessions
+set :sessions, true
 
-set :database, "sqlite3:pokemon.db"
+configure :development do
+  require "sinatra/reloader"
+  set :database, "sqlite3:pokemon.db"
+end
+
+configure :production do
+  set :database, ENV["DATABASE_URL"]
+end
 
 get "/" do
   if session[:user_id]
     # p :user_id
     @user = User.find(session[:user_id])
     @posts = Post.all
-    p @user.posts[0]
-    
+
     # p @user.posts.title 
     erb :signed_in_homepage
   else
@@ -23,6 +29,10 @@ end
 
 # displays sign in form
 get "/sign-in" do
+  if session[:user_id]
+    flash[:warning] = "You are already logged in."
+    redirect "/"
+  end
   erb :sign_in
 end
 
@@ -55,6 +65,11 @@ end
 #   with fields for relevant user information like:
 #   username, password
 get "/sign-up" do
+  if session[:user_id]
+    flash[:warning] = "You are already logged in."
+    redirect "/"
+  end
+  
   erb :sign_up
 end
 
@@ -96,7 +111,7 @@ get "/create-post" do
     flash[:warning] = "You need to be logged in to access this section."
     redirect "/"
   end
-
+  @user = User.find(session[:user_id])
   erb :create_post
 end
 
@@ -107,5 +122,35 @@ post "/create-post" do
     content: params[:content],
     user_id: @user.id
   )
+  # p "SESSION USER ID =>" + session[:user_id].to_s
   redirect "/"
 end
+
+get "/users" do
+  @user = User.find(session[:user_id])
+  @users = User.all
+  erb :users
+end
+
+# get "/profile/:trainer_name" do
+#   @user = User.find_by(trainer_name: params[:trainer_name])
+#   if User.exists?(params[:trainer_name])
+#     if @user.trainer_name == params[:trainer_name]
+#       #get profile
+#       @user_self = User.find_by(trainer_name: params[:trainer_name])
+#       erb :profile
+#     else
+#       #get the trainer name's page
+#       @other_user = User.find_by(trainer_name: params[:trainer_name])
+#       erb :profile
+#     end
+#   end
+# end
+
+get "/profile/:id" do
+  @user = User.find(params[:id])
+
+  erb :profile
+end
+
+

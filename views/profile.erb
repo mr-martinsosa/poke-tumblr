@@ -1,0 +1,53 @@
+<% if 100 > 1000 %>
+<% if @user_self%>
+    <section class = "card text-center text-white border-light">
+        <div class="card-body">
+            <h2> Trainer Name: <%=@user_self.trainer_name%>
+            <h3> Real Name: <%=@user_self.first_name%> <%=@user_self.last_name%></h3>
+            <h4> Password: Nice try guy. </h4>
+            <h5> Email: <%=@user_self.email%></h5>
+            <h6> Birthday: <%=@user_self.birthday%>
+            <p>  Joined with the ID#<%=@user_self.id%> </p>
+            <p> <%=@user_self.created_at.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
+        </div>
+    </section>
+
+    <% else %>
+    <section class = "card text-center text-white border-light">
+        <div class="card-body">
+            <h2> Trainer Name: <%=@other_user.trainer_name%>
+            <h3> Real Name: <%=@other_user.first_name%> <%=@other_user.last_name%></h3>
+            <h4> Password: Nice try guy. </h4>
+            <h5> Email: <%=@other_user.email%></h5>
+            <h6> Birthday: <%=@other_user.birthday%>
+            <p>  Joined with the ID#<%=@other_user.id%> </p>
+            <p> <%=@other_user.created_at.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
+        </div>
+    </section>
+<% end %>
+<%end%>
+
+<section class = "card text-center text-white border-light">
+        <div class="card-body">
+                <% if @user.first_name == nil && @user.last_name == nil &&
+                @user.password == nil && @user.email == nil && @user.birthday == nil%>
+                    <h2> Trainer Name: <%=@user.trainer_name%> </h2>
+                    <h3> Real Name: N/A </h3>
+                    <h4> Password: Nice try guy. </h4>
+                    <h5> Email: N/A </h5>
+                    <h6> Birthday: N/A </h6>
+                    <p>  Joined with the ID#<%=@user.id%> </p>
+                    <p> <%=@user.created_at.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
+                
+                <% else %>
+                    <h2> Trainer Name: <%=@user.trainer_name%> </h2>
+                    <h3> Real Name: <%=@user.first_name%> <%=@user.last_name%></h3>
+                    <h4> Password: Nice try guy. </h4>
+                    <h5> Email: <%=@user.email%></h5>
+                    <h6> Birthday: <%=@user.birthday%> <h6>
+                    <p>  Joined with the ID#<%=@user.id%> </p>
+                    <p> <%=@user.created_at.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
+
+                <% end %>
+        </div>
+</section>

@@ -18,6 +18,7 @@ get "/" do
   if session[:user_id]
     # p :user_id
     @user = User.find(session[:user_id])
+    @current_user = @user.trainer_name
     @posts = Post.all
 
     # p @user.posts.title 
@@ -112,6 +113,7 @@ get "/create-post" do
     redirect "/"
   end
   @user = User.find(session[:user_id])
+  @current_user = @user.trainer_name
   erb :create_post
 end
 
@@ -129,6 +131,7 @@ end
 get "/users" do
   @user = User.find(session[:user_id])
   @users = User.all
+  @current_user = @user.trainer_name
   erb :users
 end
 
@@ -148,9 +151,22 @@ end
 # end
 
 get "/profile/:id" do
-  @user = User.find(params[:id])
+  @search_user = User.find(params[:id])
+  @user = User.find(session[:user_id])
+  @current_user = @user.trainer_name
 
   erb :profile
 end
 
-
+post "/profile/:id" do
+  for post in Post.all
+    #delete all posts associated with user
+    if post.user_id == User.find(session[user_id]).id
+      Post.destroy(post)
+    end
+  end
+  User.destroy(session[:user_id])
+  session[:user_id] = nil
+  flash[:warning] = "Account Deleted."
+  redirect "/"
+end

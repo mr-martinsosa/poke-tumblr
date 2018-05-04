@@ -29,25 +29,40 @@
 
 <section class = "card text-center text-white border-light">
         <div class="card-body">
-                <% if @user.first_name == nil && @user.last_name == nil &&
-                @user.password == nil && @user.email == nil && @user.birthday == nil%>
-                    <h2> Trainer Name: <%=@user.trainer_name%> </h2>
-                    <h3> Real Name: N/A </h3>
-                    <h4> Password: Nice try guy. </h4>
-                    <h5> Email: N/A </h5>
-                    <h6> Birthday: N/A </h6>
-                    <p>  Joined with the ID#<%=@user.id%> </p>
-                    <p> <%=@user.created_at.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
+                <h2> Trainer Name: <%=@search_user.trainer_name%> </h2>
+                <p>  Joined with the ID#<%=@search_user.id%> </p>
+                <p> <%=@user.created_at.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
+
+                <% if @search_user.last_name == "" %>
+                    <h3> First Name: N/A </h3>
+                <% end %>
+
+                <% if @search_user.first_name == "" %>
+                    <h3> Last Name: N/A </h3>
+                <% end %>
+
+                <% if @search_user.password == "" %>
+                    <h4> Password: Nice try guy. </h4> 
+                <% end %>
                 
+                <% if @search_user.email == "" %> 
+                    <h5> Email: Probably doesn't have one? </h5>
+                <% end %>
+
+                <% if @search_user.birthday == nil %>
+                    <h6> Birthday: Was probably never born :( </h6>
+                    
                 <% else %>
-                    <h2> Trainer Name: <%=@user.trainer_name%> </h2>
-                    <h3> Real Name: <%=@user.first_name%> <%=@user.last_name%></h3>
+                    <h3> Real Name: <%=@search_user.first_name%> <%=@search_user.last_name%></h3>
                     <h4> Password: Nice try guy. </h4>
-                    <h5> Email: <%=@user.email%></h5>
-                    <h6> Birthday: <%=@user.birthday%> <h6>
-                    <p>  Joined with the ID#<%=@user.id%> </p>
-                    <p> <%=@user.created_at.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
+                    <h5> Email: <%=@search_user.email%></h5>
+                    <h6> Birthday: <%=@search_user.birthday%> <h6>
 
                 <% end %>
+        <%if session[:user_id] == @search_user.id%>
+            <form action="/profile/<%=@search_user.id%>" method="post">
+                <input type="submit" value="Delete Profile">  
+            </form>
+        <% end %>  
         </div>
 </section>

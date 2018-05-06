@@ -1,3 +1,4 @@
+
 .carousel-inner img {
     margin: auto;
   }
@@ -51,15 +52,18 @@
 
   body{
     background: linear-gradient(rgb(168, 219, 168), rgb(11, 72, 107));
-    /* background-repeat: no-repeat; */
   }
 
   .card{
     background: radial-gradient(rgb(168, 219, 168), rgb(11, 72, 107));
-    /* background: radial-gradient(red, yellow, green); */
+    font-family: 'Pangolin', cursive;
+    color: black;
   }
+
   footer{
     background-color: #457b9d;
+    font-family: 'Pangolin', cursive;
+    color: black;
   }
 
 #center-sign-in{
@@ -69,11 +73,22 @@
     margin-right: 200px;
 }
 
+#center-sign-up{
+  margin-top: 200px;
+  margin-bottom: 200px;
+  margin-left: 200px;
+  margin-right: 200px;
+}
 
 
+/*Bootstrap overriding fontcolor*/
+.text-white{
+  color: black!important;
+}
 
-
-
+a{
+  color: black;
+}
 
 
 

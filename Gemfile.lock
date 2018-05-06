@@ -25,6 +25,10 @@ GEM
     rack-protection (2.0.1)
       rack
     rake (12.3.1)
+    ruby_http_client (3.3.0)
+    sendgrid-ruby (5.2.0)
+      ruby_http_client (~> 3.2)
+      sinatra (>= 1.4.7, < 3)
     sinatra (2.0.1)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -55,6 +59,7 @@ DEPENDENCIES
   activerecord
   pg
   rake
+  sendgrid-ruby
   sinatra
   sinatra-activerecord
   sinatra-contrib

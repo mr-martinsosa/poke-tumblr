@@ -1,8 +1,10 @@
 require "sinatra"
 require "sinatra/activerecord"
 require "sinatra/flash"
+require "sendgrid-ruby"
 require "./models"
 
+include SendGrid
 set :sessions, true
 
 configure :development do
@@ -89,6 +91,26 @@ post "/sign-up" do
 
   # lets the user know they have signed up
   flash[:info] = "Thanks #{@user.trainer_name} for signing up!"
+
+  #send an email to let user know they signed up
+  @email = params[:email]
+  from = Email.new(email: ENV["PERSONAL_EMAIL"])
+  to = Email.new(email: @email )
+  subject = "Welcome to PokeJournal!"
+  content = Content.new(
+    type: "text/html",
+    value: "Thank you " + params[:first_name] + ", for joining our Pokemon community, PokeJournal,
+    a place where every Pokemon Fan is welcome! <br/> <img src ='https://m.popkey.co/3512d2/9wmyD_s-200x150.gif'/>"
+  )
+
+# create mail object with from, subject, to and content
+  mail = Mail.new(from, subject, to, content)
+
+# sets up the api key
+  sg = SendGrid::API.new(
+    api_key: ENV["SENDGRID_API_KEY"]
+  )
+  response = sg.client.mail._("send").post(request_body: mail.to_json)
 
   # assuming this page exists
   redirect "/"

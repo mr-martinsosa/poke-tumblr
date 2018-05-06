@@ -5,6 +5,7 @@ gem "sinatra-flash"
 gem "activerecord"
 gem "sinatra-activerecord"
 gem "rake"
+gem "sendgrid-ruby"
 
 group :development do 
     gem "sqlite3"

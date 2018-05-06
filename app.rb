@@ -77,7 +77,19 @@ get "/sign-up" do
 end
 
 post "/sign-up" do
-  @user = User.create(
+  @user = User.find_by(trainer_name: params[:trainer_name])
+  
+  if User.exists?(trainer_name: params[:trainer_name])
+    flash[:warning] = "Trainer Name in use."
+    redirect "/sign-up"
+  end
+
+  if params[:email] == ""
+    flash[:warning] = "Please input an Email."
+    redirect "/sign-up"
+  end 
+
+    @user = User.create(
     trainer_name: params[:trainer_name],
     password: params[:password],
     first_name: params[:first_name],

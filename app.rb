@@ -235,3 +235,8 @@ post "/query" do
     redirect "/404"
   end
 end
+
+not_found do
+  status 404
+  erb :oops
+end

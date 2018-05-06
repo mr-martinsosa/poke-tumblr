@@ -26,7 +26,9 @@
                 <% else %>
                     <h3> Real Name: <%=@search_user.first_name%> <%=@search_user.last_name%></h3>
                     <h4> Password: Nice try guy. </h4>
-                    <h5> Email: <%=@search_user.email%></h5>
+                    <%if session[:user_id] == @search_user.id%>
+                        <h5> Email: <%=@search_user.email%></h5>
+                    <%end%>
                     <h6> Birthday: <%=@search_user.birthday.localtime.strftime("%m/%d/%Y at %I:%M%p")%> <h6>
 
                 <% end %>

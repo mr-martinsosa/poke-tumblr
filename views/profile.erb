@@ -8,7 +8,7 @@
             <h5> Email: <%=@user_self.email%></h5>
             <h6> Birthday: <%=@user_self.birthday%>
             <p>  Joined with the ID#<%=@user_self.id%> </p>
-            <p> <%=@user_self.created_at.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
+            <p> <%=@user_self.created_at.localtime.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
         </div>
     </section>
 
@@ -21,7 +21,7 @@
             <h5> Email: <%=@other_user.email%></h5>
             <h6> Birthday: <%=@other_user.birthday%>
             <p>  Joined with the ID#<%=@other_user.id%> </p>
-            <p> <%=@other_user.created_at.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
+            <p> <%=@other_user.created_at.localtime.strftime("Joined on: %m/%d/%Y at %I:%M%p")%></p>
         </div>
     </section>
 <% end %>
@@ -56,13 +56,35 @@
                     <h3> Real Name: <%=@search_user.first_name%> <%=@search_user.last_name%></h3>
                     <h4> Password: Nice try guy. </h4>
                     <h5> Email: <%=@search_user.email%></h5>
-                    <h6> Birthday: <%=@search_user.birthday%> <h6>
+                    <h6> Birthday: <%=@search_user.birthday.localtime.strftime("%m/%d/%Y at %I:%M%p")%> <h6>
 
                 <% end %>
         <%if session[:user_id] == @search_user.id%>
-            <form action="/profile/<%=@search_user.id%>" method="post">
+            <form action="/delete/<%=@search_user.id%>" method="post">
                 <input type="submit" value="Delete Profile">  
             </form>
         <% end %>  
         </div>
 </section>
+
+<%for post in @posts.reverse%>
+    <% if post.user_id == @search_user.id %>
+    <section class = "card text-center text-white border-light">
+        <div class="card-body">
+          <h2> Author: <%=User.find(post.user_id).trainer_name%>
+          <h3> Title: <%=post.title%></h3>
+          <h5><%=post.content%></h5>
+          <p>Post Number: #<%=post.id%> <%=post.created_at.localtime.strftime("created on %m/%d/%Y at %I:%M%p")%></p>
+          
+          <% if @user != nil %>
+          <% if post.user_id == @user.id%>
+          <form action="/profile/delete_post/<%=post.id%>" method="post">
+                <input id ="hidden" type="hidden" name="_method" value="delete">
+                <input type="submit" value="Delete Post"> 
+          </form>
+        </div>
+        <% end %>
+        <% end %>
+    </section>
+    <% end %>
+<% end %>

@@ -151,6 +151,7 @@ end
 # end
 
 get "/profile/:id" do
+  @posts = Post.all
   @search_user = User.find(params[:id])
   
   if session[:user_id] != nil
@@ -158,16 +159,32 @@ get "/profile/:id" do
     @current_user = @user.trainer_name
   end
   
-  
-
   erb :profile
 end
 
-post "/profile/:id" do
-  for post in Post.all
+#post "/profile/delete_post/:id" do
+ # @posts = User.all.map(&:to_s)
+  # for post in @posts
+  #   if post.user_id == User.find(session[:user_id]).id &&
+  #     post.id == params[:id]
+  #     # post.destroy
+  #   end
+  # end
+# end
+
+delete "/profile/delete_post/:id" do
+  @post = Post.find_by_id(params[:id])
+  @post.delete
+  flash[:warning] = "Post deleted."
+  redirect "/"
+end
+
+post "/delete/:id" do
+  @posts = Post.all
+  for post in @posts
     #delete all posts associated with user
-    if post.user_id == User.find(session[user_id]).id
-      Post.destroy(post)
+    if post.user_id == User.find(session[:user_id]).id
+      Post.destroy(post.id)
     end
   end
   User.destroy(session[:user_id])
@@ -177,10 +194,7 @@ post "/profile/:id" do
 end
 
 post "/query" do
-  p params[:trainer_name]
-  p "hello"
   if User.all.exists?(:trainer_name => params[:trainer_name]) #If trainer name matches params do next
-    p "hi"
     @query_user = User.find_by(trainer_name: params[:trainer_name])
     redirect "/profile/#{@query_user.id}"
   else

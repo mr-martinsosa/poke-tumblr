@@ -2,7 +2,7 @@
     <section class = "card text-center text-white border-light">
         <div class="card-body">
           <h2> <a href= "profile/<%= user.id %>"</a>Trainer Name: <%=user.trainer_name%> 
-          <p><%=user.created_at.strftime("Joined on %m/%d/%Y at %I:%M%p")%></p>
+          <p><%=user.created_at.localtime.strftime("Joined on %m/%d/%Y at %I:%M%p")%></p>
         </div>
     </section>
 <% end %>

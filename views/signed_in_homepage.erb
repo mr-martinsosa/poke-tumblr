@@ -17,6 +17,7 @@
           <h3> Title: <%=post.title%></h3>
           <h5><%=post.content%></h5>
           <p>Post Number: #<%=post.id%> <%=post.created_at.localtime.strftime("created on %m/%d/%Y at %I:%M%p")%></p>
+          <img src = <%=HTTParty.get("http://pokeapi.co/api/v2/pokemon/#{post.id}")["sprites"]["front_default"]%>>
         </div>
     </section>
 <% end %>

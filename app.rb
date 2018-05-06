@@ -2,6 +2,7 @@ require "sinatra"
 require "sinatra/activerecord"
 require "sinatra/flash"
 require "sendgrid-ruby"
+require "httparty"
 require "./models"
 
 include SendGrid
@@ -18,12 +19,11 @@ end
 
 get "/" do
   if session[:user_id]
-    # p :user_id
     @user = User.find(session[:user_id])
     @current_user = @user.trainer_name
     @posts = Post.all
-
-    # p @user.posts.title 
+    response = HTTParty.get("http://pokeapi.co/api/v2/pokemon/1")["sprites"]["front_default"]
+    p response["sprites"]["front_default"]
     erb :signed_in_homepage
   else
     erb :signed_out_homepage
@@ -158,7 +158,15 @@ post "/create-post" do
     content: params[:content],
     user_id: @user.id
   )
-  # p "SESSION USER ID =>" + session[:user_id].to_s
+  url = "http://pokeapi.co/api/v2/pokemon/#{@post.id}"
+  response = HTTParty.get(url , headers =>{'Content-Type' => 'application/json'})
+  p "!!!!!!!!!!!!!!!!!!"
+  p response["sprites"]["front_default"]
+  p "!!!!!!!!!!!!!!!!!!"
+  @pokemon = response["sprites"]["front_default"]
+  p "!!!!!!!!!!!!!!!!!!"
+  p @pokemon
+  p "!!!!!!!!!!!!!!!!!!"
   redirect "/"
 end
 
@@ -168,21 +176,6 @@ get "/users" do
   @current_user = @user.trainer_name
   erb :users
 end
-
-# get "/profile/:trainer_name" do
-#   @user = User.find_by(trainer_name: params[:trainer_name])
-#   if User.exists?(params[:trainer_name])
-#     if @user.trainer_name == params[:trainer_name]
-#       #get profile
-#       @user_self = User.find_by(trainer_name: params[:trainer_name])
-#       erb :profile
-#     else
-#       #get the trainer name's page
-#       @other_user = User.find_by(trainer_name: params[:trainer_name])
-#       erb :profile
-#     end
-#   end
-# end
 
 get "/profile/:id" do
   @posts = Post.all
@@ -195,16 +188,6 @@ get "/profile/:id" do
   
   erb :profile
 end
-
-#post "/profile/delete_post/:id" do
- # @posts = User.all.map(&:to_s)
-  # for post in @posts
-  #   if post.user_id == User.find(session[:user_id]).id &&
-  #     post.id == params[:id]
-  #     # post.destroy
-  #   end
-  # end
-# end
 
 delete "/profile/delete_post/:id" do
   @post = Post.find_by_id(params[:id])

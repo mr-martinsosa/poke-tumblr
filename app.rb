@@ -237,6 +237,11 @@ post "/query" do
 end
 
 not_found do
+  if session[:user_id]
+    # p :user_id
+    @user = User.find(session[:user_id])
+    @current_user = @user.trainer_name
+  end
   status 404
   erb :oops
 end

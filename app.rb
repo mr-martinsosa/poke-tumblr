@@ -18,12 +18,10 @@ end
 
 get "/" do
   if session[:user_id]
-    # p :user_id
     @user = User.find(session[:user_id])
     @current_user = @user.trainer_name
     @posts = Post.all
-
-    # p @user.posts.title 
+ 
     erb :signed_in_homepage
   else
     erb :signed_out_homepage
@@ -97,8 +95,6 @@ post "/sign-up" do
     email: params[:email],
     birthday: params[:birthday]
   )
-
-  # this line does the signing in
   session[:user_id] = @user.id
 
   # lets the user know they have signed up
@@ -114,25 +110,17 @@ post "/sign-up" do
     value: "Thank you " + params[:first_name] + ", for joining our Pokemon community, PokeJournal,
     a place where every Pokemon Fan is welcome! <br/> <img src ='https://m.popkey.co/3512d2/9wmyD_s-200x150.gif'/>"
   )
-
-# create mail object with from, subject, to and content
   mail = Mail.new(from, subject, to, content)
 
-# sets up the api key
   sg = SendGrid::API.new(
     api_key: ENV["SENDGRID_API_KEY"]
   )
   response = sg.client.mail._("send").post(request_body: mail.to_json)
 
-  # assuming this page exists
   redirect "/"
 end
 
-# when hitting this get path via a link
-#   it would reset the session user_id and redirect
-#   back to the homepage
 get "/sign-out" do
-  # this is the line that signs a user out
   session[:user_id] = nil
 
   # lets the user know they have signed out
@@ -158,7 +146,6 @@ post "/create-post" do
     content: params[:content],
     user_id: @user.id
   )
-  # p "SESSION USER ID =>" + session[:user_id].to_s
   redirect "/"
 end
 
@@ -168,21 +155,6 @@ get "/users" do
   @current_user = @user.trainer_name
   erb :users
 end
-
-# get "/profile/:trainer_name" do
-#   @user = User.find_by(trainer_name: params[:trainer_name])
-#   if User.exists?(params[:trainer_name])
-#     if @user.trainer_name == params[:trainer_name]
-#       #get profile
-#       @user_self = User.find_by(trainer_name: params[:trainer_name])
-#       erb :profile
-#     else
-#       #get the trainer name's page
-#       @other_user = User.find_by(trainer_name: params[:trainer_name])
-#       erb :profile
-#     end
-#   end
-# end
 
 get "/profile/:id" do
   @posts = Post.all
@@ -195,16 +167,6 @@ get "/profile/:id" do
   
   erb :profile
 end
-
-#post "/profile/delete_post/:id" do
- # @posts = User.all.map(&:to_s)
-  # for post in @posts
-  #   if post.user_id == User.find(session[:user_id]).id &&
-  #     post.id == params[:id]
-  #     # post.destroy
-  #   end
-  # end
-# end
 
 delete "/profile/delete_post/:id" do
   @post = Post.find_by_id(params[:id])
@@ -238,7 +200,6 @@ end
 
 not_found do
   if session[:user_id]
-    # p :user_id
     @user = User.find(session[:user_id])
     @current_user = @user.trainer_name
   end
